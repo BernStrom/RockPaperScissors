@@ -62,7 +62,7 @@ struct ContentView: View {
             Spacer()
             Spacer()
             
-            Text("Question \(numQuestions) of 10")
+            Text("Round \(numQuestions) of 10")
                 .font(.headline)
             
             Spacer()
