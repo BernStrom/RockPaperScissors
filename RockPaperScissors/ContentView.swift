@@ -22,7 +22,19 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
+            RadialGradient(stops: [
+                .init(color: Color(red: 0.4, green: 0.7, blue: 0.65, opacity: 0.9), location: 0.3),
+                .init(color: Color(red: 0.76, green: 0.45, blue: 0.26, opacity: 0.5), location: 1)
+            ], center: .top, startRadius: 200, endRadius: 700)
+                .ignoresSafeArea()
+            
             VStack {
+                Spacer()
+                
+                Text("Rock Paper Scissors")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.secondary)
+                
                 Spacer()
                 
                 VStack {
@@ -51,9 +63,11 @@ struct ContentView: View {
                                 if playerShouldWin {
                                     Text("Win")
                                         .font(.largeTitle.weight(.semibold))
+                                        .foregroundColor(Color(red: 0.1, green: 0.69, blue: 0.55))
                                 } else {
                                     Text("Lose")
                                         .font(.largeTitle.weight(.semibold))
+                                        .foregroundColor(Color(red: 0.69, green: 0.1, blue: 0.25))
                                 }
                             }
                             
@@ -65,7 +79,7 @@ struct ContentView: View {
                     .background(.regularMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     
-                    HStack(spacing: 50) {
+                    HStack(spacing: 40) {
                         ForEach(0..<3) { moveNumber in
                             Button {
                                 moveTapped(moveNumber)
@@ -73,9 +87,15 @@ struct ContentView: View {
                                 VStack {
                                     Text(winningMoves[moveNumber])
                                         .font(.system(size: 70))
+                                        .padding(10)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color(red: 0.1, green: 0.59, blue: 0.55), lineWidth: 1)
+                                        )
                                     
                                     Text(winningMoveNames[moveNumber])
                                         .font(.title3)
+                                        .foregroundColor(Color(red: 0.1, green: 0.49, blue: 0.55))
                                 }
                             }
                         }
@@ -87,11 +107,13 @@ struct ContentView: View {
                 
                 Text("Round \(numRounds) of 10")
                     .font(.headline)
+                    .foregroundColor(Color(red: 0.30, green: 0.30, blue: 0.30))
                 
                 Spacer()
                 
                 Text("Score: \(playerScore)")
                     .font(.title.bold())
+                    .foregroundColor(Color(red: 0.30, green: 0.30, blue: 0.30))
                 
                 Spacer()
             }
