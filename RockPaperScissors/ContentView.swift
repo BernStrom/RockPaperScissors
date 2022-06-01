@@ -102,8 +102,13 @@ struct ContentView: View {
         } message: {
             Text("""
                  \(scoreMessage)
-                 Your current score is \(playerScore).
+                 Your current score is \(playerScore) points.
                  """)
+        }
+        .alert(scoreTitle, isPresented: $endGame) {
+            Button("Reset", action: reset)
+        } message: {
+            Text("You score a total of \(playerScore) points.")
         }
     }
     
@@ -139,7 +144,16 @@ struct ContentView: View {
         if numRounds < 10 {
             numRounds += 1
             appChoice = Int.random(in: 0...2)
+            playerShouldWin.toggle()
         }
+    }
+    
+    func reset() {
+        numRounds = 1
+        playerScore = 0
+        playerShouldWin = Bool.random()
+        appChoice = Int.random(in: 0...2)
+        showingScore = false
     }
 }
 
