@@ -9,10 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var gameMoves = ["👊", "👋", "✌️"]
+    @State private var winningMoves = ["👋", "✌️", "👊"]
+    @State private var winningMoveNames = ["Paper", "Scissors", "Rock"]
     @State private var appChoice = Int.random(in: 0...2)
     @State private var playerShouldWin = Bool.random()
     @State private var playerScore = 0
     @State private var numQuestions = 1
+    @State private var scoreTitle = ""
+    @State private var scoreMessage = ""
+    @State private var showingScore = false
+    @State private var endGame = false
     
     var body: some View {
         VStack {
@@ -32,7 +38,7 @@ struct ContentView: View {
                                 .font(.title3.weight(.light))
                             
                             Text(gameMoves[appChoice])
-                                .font(.largeTitle.weight(.semibold))
+                                .font(.largeTitle)
                         }
                         
                         Spacer()
@@ -57,9 +63,25 @@ struct ContentView: View {
                 .padding(.vertical, 20)
                 .background(.regularMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+                HStack(spacing: 50) {
+                    ForEach(0..<3) { moveNumber in
+                        Button {
+                            moveTapped(moveNumber)
+                        } label: {
+                            VStack {
+                                Text(winningMoves[moveNumber])
+                                    .font(.system(size: 70))
+                                
+                                Text(winningMoveNames[moveNumber])
+                                    .font(.title3)
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 50)
             }
             
-            Spacer()
             Spacer()
             
             Text("Round \(numQuestions) of 10")
@@ -73,6 +95,34 @@ struct ContentView: View {
             Spacer()
         }
         .padding()
+    }
+    
+    func moveTapped(_ number: Int) {
+        if number == appChoice && playerShouldWin {
+            scoreTitle = "Correct Move"
+            scoreMessage = "You gained +10 points to your score!"
+            playerScore += 10
+        } else if number != appChoice && !playerShouldWin {
+            scoreTitle = "Correct Move"
+            scoreMessage = "You gained +10 points to your score!"
+            playerScore += 10
+        } else {
+            scoreTitle = "Wrong Move"
+            scoreMessage = "You lost -10 points off your score."
+            
+            if playerScore >= 10 {
+                playerScore -= 10
+            } else {
+                playerScore = 0
+            }
+        }
+        
+        showingScore = true
+        
+        if numQuestions == 10 {
+            endGame = true
+            scoreTitle = "Your Results"
+        }
     }
 }
 
