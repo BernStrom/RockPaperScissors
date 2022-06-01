@@ -14,87 +14,97 @@ struct ContentView: View {
     @State private var appChoice = Int.random(in: 0...2)
     @State private var playerShouldWin = Bool.random()
     @State private var playerScore = 0
-    @State private var numQuestions = 1
+    @State private var numRounds = 1
     @State private var scoreTitle = ""
     @State private var scoreMessage = ""
     @State private var showingScore = false
     @State private var endGame = false
     
     var body: some View {
-        VStack {
-            Spacer()
-            
+        ZStack {
             VStack {
-                VStack(spacing: 15) {
-                    Text("Select your move based on the conditions below")
-                        .font(.subheadline.weight(.heavy))
-                        .foregroundStyle(.secondary)
-                    
-                    HStack {
-                        Spacer()
-                        
-                        VStack {
-                            Text("Game Move:")
-                                .font(.title3.weight(.light))
-                            
-                            Text(gameMoves[appChoice])
-                                .font(.largeTitle)
-                        }
-                        
-                        Spacer()
-                        
-                        VStack {
-                            Text("Win or Lose Round:")
-                                .font(.title3.weight(.light))
-                            
-                            if playerShouldWin {
-                                Text("Win")
-                                    .font(.largeTitle.weight(.semibold))
-                            } else {
-                                Text("Lose")
-                                    .font(.largeTitle.weight(.semibold))
-                            }
-                        }
-                        
-                        Spacer()
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .background(.regularMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                Spacer()
                 
-                HStack(spacing: 50) {
-                    ForEach(0..<3) { moveNumber in
-                        Button {
-                            moveTapped(moveNumber)
-                        } label: {
+                VStack {
+                    VStack(spacing: 15) {
+                        Text("Select your move based on the conditions below")
+                            .font(.subheadline.weight(.heavy))
+                            .foregroundStyle(.secondary)
+                        
+                        HStack {
+                            Spacer()
+                            
                             VStack {
-                                Text(winningMoves[moveNumber])
-                                    .font(.system(size: 70))
+                                Text("Game Move:")
+                                    .font(.title3.weight(.light))
                                 
-                                Text(winningMoveNames[moveNumber])
-                                    .font(.title3)
+                                Text(gameMoves[appChoice])
+                                    .font(.largeTitle)
+                            }
+                            
+                            Spacer()
+                            
+                            VStack {
+                                Text("Win or Lose Round:")
+                                    .font(.title3.weight(.light))
+                                
+                                if playerShouldWin {
+                                    Text("Win")
+                                        .font(.largeTitle.weight(.semibold))
+                                } else {
+                                    Text("Lose")
+                                        .font(.largeTitle.weight(.semibold))
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 20)
+                    .background(.regularMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    
+                    HStack(spacing: 50) {
+                        ForEach(0..<3) { moveNumber in
+                            Button {
+                                moveTapped(moveNumber)
+                            } label: {
+                                VStack {
+                                    Text(winningMoves[moveNumber])
+                                        .font(.system(size: 70))
+                                    
+                                    Text(winningMoveNames[moveNumber])
+                                        .font(.title3)
+                                }
                             }
                         }
                     }
+                    .padding(.vertical, 50)
                 }
-                .padding(.vertical, 50)
+                
+                Spacer()
+                
+                Text("Round \(numRounds) of 10")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Text("Score: \(playerScore)")
+                    .font(.title.bold())
+                
+                Spacer()
             }
-            
-            Spacer()
-            
-            Text("Round \(numQuestions) of 10")
-                .font(.headline)
-            
-            Spacer()
-            
-            Text("Score: \(playerScore)")
-                .font(.title.bold())
-            
-            Spacer()
+            .padding()
         }
-        .padding()
+        .alert(scoreTitle, isPresented: $showingScore) {
+            Button("Continue", action: nextRound)
+        } message: {
+            Text("""
+                 \(scoreMessage)
+                 Your current score is \(playerScore).
+                 """)
+        }
     }
     
     func moveTapped(_ number: Int) {
@@ -119,9 +129,16 @@ struct ContentView: View {
         
         showingScore = true
         
-        if numQuestions == 10 {
+        if numRounds == 10 {
             endGame = true
             scoreTitle = "Your Results"
+        }
+    }
+    
+    func nextRound() {
+        if numRounds < 10 {
+            numRounds += 1
+            appChoice = Int.random(in: 0...2)
         }
     }
 }
