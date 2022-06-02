@@ -14,7 +14,7 @@ struct RockPaperScissorsEmoji: View {
     var body: some View {
         VStack {
             Text(source)
-                .font(.system(size: 70))
+                .font(.system(size: 55))
                 .padding(10)
                 .overlay(
                     Circle()
