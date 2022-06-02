@@ -7,10 +7,85 @@
 
 import SwiftUI
 
+struct RockPaperScissorsEmoji: View {
+    var source: String
+    var caption: String
+    
+    var body: some View {
+        VStack {
+            Text(source)
+                .font(.system(size: 70))
+                .padding(10)
+                .overlay(
+                    Circle()
+                        .stroke(Color(red: 0.1, green: 0.59, blue: 0.55), lineWidth: 1)
+                )
+            
+            Text(caption)
+                .font(.title3)
+                .foregroundColor(Color(red: 0.1, green: 0.49, blue: 0.55))
+        }
+    }
+}
+
+struct Title: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle.bold())
+            .foregroundStyle(.secondary)
+    }
+}
+
+struct ConditionTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.subheadline.weight(.heavy))
+            .foregroundStyle(.secondary)
+    }
+}
+
+struct ConditionLabel: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.title3.weight(.light))
+    }
+}
+
+struct PlayerProgress: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(Color(red: 0.30, green: 0.30, blue: 0.30))
+    }
+}
+
+extension View {
+    func titleStyle() -> some View {
+        modifier(Title())
+    }
+}
+
+extension View {
+    func conditionTitleStyle() -> some View {
+        modifier(ConditionTitle())
+    }
+}
+
+extension View {
+    func conditionLabelStyle() -> some View {
+        modifier(ConditionLabel())
+    }
+}
+
+extension View {
+    func playerProgressColor() -> some View {
+        modifier(PlayerProgress())
+    }
+}
+
 struct ContentView: View {
     @State private var gameMoves = ["👊", "👋", "✌️"]
-    @State private var winningMoves = ["👋", "✌️", "👊"]
-    @State private var winningMoveNames = ["Paper", "Scissors", "Rock"]
+    @State private var playerMoves = ["👋", "✌️", "👊"]
+    @State private var playerMoveNames = ["Paper", "Scissors", "Rock"]
     @State private var appChoice = Int.random(in: 0...2)
     @State private var playerShouldWin = Bool.random()
     @State private var playerScore = 0
@@ -32,23 +107,21 @@ struct ContentView: View {
                 Spacer()
                 
                 Text("Rock Paper Scissors")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.secondary)
+                    .titleStyle()
                 
                 Spacer()
                 
                 VStack {
                     VStack(spacing: 15) {
                         Text("Select your move based on the conditions below")
-                            .font(.subheadline.weight(.heavy))
-                            .foregroundStyle(.secondary)
+                            .conditionTitleStyle()
                         
                         HStack {
                             Spacer()
                             
                             VStack {
                                 Text("Game Move:")
-                                    .font(.title3.weight(.light))
+                                    .conditionLabelStyle()
                                 
                                 Text(gameMoves[appChoice])
                                     .font(.largeTitle)
@@ -58,7 +131,7 @@ struct ContentView: View {
                             
                             VStack {
                                 Text("Win or Lose Round:")
-                                    .font(.title3.weight(.light))
+                                    .conditionLabelStyle()
                                 
                                 if playerShouldWin {
                                     Text("Win")
@@ -84,19 +157,7 @@ struct ContentView: View {
                             Button {
                                 moveTapped(moveNumber)
                             } label: {
-                                VStack {
-                                    Text(winningMoves[moveNumber])
-                                        .font(.system(size: 70))
-                                        .padding(10)
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color(red: 0.1, green: 0.59, blue: 0.55), lineWidth: 1)
-                                        )
-                                    
-                                    Text(winningMoveNames[moveNumber])
-                                        .font(.title3)
-                                        .foregroundColor(Color(red: 0.1, green: 0.49, blue: 0.55))
-                                }
+                                RockPaperScissorsEmoji(source: playerMoves[moveNumber], caption: playerMoveNames[moveNumber])
                             }
                         }
                     }
@@ -107,13 +168,13 @@ struct ContentView: View {
                 
                 Text("Round \(numRounds) of 10")
                     .font(.headline)
-                    .foregroundColor(Color(red: 0.30, green: 0.30, blue: 0.30))
+                    .playerProgressColor()
                 
                 Spacer()
                 
                 Text("Score: \(playerScore)")
                     .font(.title.bold())
-                    .foregroundColor(Color(red: 0.30, green: 0.30, blue: 0.30))
+                    .playerProgressColor()
                 
                 Spacer()
             }
