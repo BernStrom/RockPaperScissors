@@ -32,6 +32,10 @@ For a more step-by-step example on how the game works:
 * If they are correct they score a point; otherwise they lose a point.
 * The game ends after 10 questions, at which point their score is shown.
 
+## App preview
+
+https://user-images.githubusercontent.com/65307853/182375598-e60d0cf3-0c08-45c3-b646-f22d0e714556.mp4
+
 ## Trying it yourself
 
 RockPaperScissors is written using Xcode 13.2 and Swift 5.0. To try it out, you can clone this project and build it immediately by opening `RockPaperScissors.xcodeproj`.
